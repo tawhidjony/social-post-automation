@@ -14,12 +14,24 @@ import {
     SidebarMenuItem,
 } from '@/components/ui/sidebar';
 import { dashboard } from '@/routes';
+import { index } from "@/routes/social-accounts"; 
+import { create, store } from "@/routes/posts"; 
 import type { NavItem } from '@/types';
 
 const mainNavItems: NavItem[] = [
     {
         title: 'Dashboard',
         href: dashboard(),
+        icon: LayoutGrid,
+    },
+    {
+        title: 'Social Accounts',
+        href: index(),
+        icon: LayoutGrid,
+    },
+    {
+        title: 'Create Post',
+        href: create(),
         icon: LayoutGrid,
     },
 ];

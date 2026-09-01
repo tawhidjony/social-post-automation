@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
 import { Head, useForm } from '@inertiajs/react';
+import { create, store } from "@/routes/posts";
 
 export default function Create({ socialAccounts }) {
-    const { data, setData, post, processing, errors } = useForm({
+    const { data, setData, submit, processing, errors } = useForm({
         social_account_ids: [],
         content: '',
         media: [],
@@ -29,7 +30,7 @@ export default function Create({ socialAccounts }) {
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        post(route('posts.store'));
+        submit(store());
     };
 
     return (

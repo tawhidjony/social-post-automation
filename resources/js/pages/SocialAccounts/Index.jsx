@@ -1,11 +1,9 @@
 import React from 'react';
-import { Head } from '@inertiajs/react';
-import { redirect } from "@/actions/App/Http/Controllers/SocialAccountController";
+import { Head, Link } from '@inertiajs/react';
+import { redirect } from "@/routes/social";
 
 export default function Index({ accounts }) {
-    const handleConnect = (provider) => {
-        window.location.href = route('social.redirect', { provider });
-    };
+
 
     console.log('Accounts:', accounts); // Debugging line to check the accounts data
 
@@ -17,15 +15,15 @@ export default function Index({ accounts }) {
                     <h1 className="text-2xl font-bold text-gray-900">Connected Accounts</h1>
                     
                     <div className="flex gap-2">
-                        <button
-                            onClick={() => {
-                                alert('This will connect your Facebook Page.'); // Placeholder for actual connect logic
-                                redirect.url({ provider: 'facebook' })
-                            }}
-                            className="bg-blue-600 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-blue-700 transition"
-                        >
-                            + Connect Facebook Page
-                        </button>
+
+<button
+    onClick={() => window.location.href = redirect({ provider: 'facebook' }).url}
+    className="bg-blue-600 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-blue-700 transition"
+>
+    + Connect Facebook Page
+</button>
+
+
                     </div>
                 </div>
 
