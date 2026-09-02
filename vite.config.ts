@@ -39,9 +39,9 @@ export default defineConfig({
             ? {
                   ws: {
                       host: process.env.VITE_DEV_SERVER_HOST,
-                      protocol: 'wss',
+                      protocol: 'ws',
                       clientPort: Number(
-                          process.env.VITE_DEV_SERVER_CLIENT_PORT ?? 443,
+                          process.env.VITE_DEV_SERVER_CLIENT_PORT ?? 8080,
                       ),
                       path: '/vite-hmr',
                   },

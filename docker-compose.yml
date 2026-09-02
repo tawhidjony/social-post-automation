@@ -7,9 +7,9 @@ services:
         environment:
             SERVER_HOST: 0.0.0.0
             SERVER_PORT: "8080"
-            VITE_DEV_SERVER_ORIGIN: https://${LOCAL_DOMAIN:-social-post-automation.test}
-            VITE_DEV_SERVER_HOST: ${LOCAL_DOMAIN:-social-post-automation.test}
-            VITE_DEV_SERVER_CLIENT_PORT: "443"
+            VITE_DEV_SERVER_ORIGIN: http://localhost:8080
+            VITE_DEV_SERVER_HOST: localhost
+            VITE_DEV_SERVER_CLIENT_PORT: "8080"
         stdin_open: true
         tty: true
         depends_on:
@@ -22,10 +22,8 @@ services:
         container_name: tawhidjony-nginx
         ports:
             - "8080:80"
-            - "443:443"
         volumes:
             - .:/src
-            - ./.docker/nginx/certs:/etc/nginx/certs:ro
         networks:
             - tawhidjony
         depends_on:
