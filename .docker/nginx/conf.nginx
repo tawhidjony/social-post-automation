@@ -1,0 +1,25 @@
+server {
+    listen 80 default_server;
+    listen [::]:80 default_server;
+
+    root /src/public;
+
+    # এখানে লিমিট বাড়িয়ে দিন (যেমন ১০০ মেগাবাইট)
+    client_max_body_size 100M; 
+
+    index index.html index.php index.htm index.nginx-debian.html;
+
+    server_name _;
+
+    location / {
+             try_files $uri $uri/ /index.php?$query_string;
+    }
+
+    location ~ \.php$ {
+            include snippets/fastcgi-php.conf;
+            fastcgi_pass tawhidjony-php:9000;
+            
+            # মাঝেমধ্যে PHP-FPM এর জন্য এখানেও কানেকশন টাইমআউট বাড়ানো প্রয়োজন হতে পারে
+            fastcgi_read_timeout 300;
+    }
+}
