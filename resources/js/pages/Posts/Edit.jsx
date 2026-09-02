@@ -20,7 +20,7 @@ function toDateTimeLocal(value) {
 }
 
 export default function Edit({ post, socialAccounts }) {
-    const { data, setData, post: submitPost, processing, errors } = useForm({
+    const { data, setData, post: submitPost, processing, errors, transform } = useForm({
         social_account_ids: post.targets?.map((target) => target.social_account_id) ?? [],
         content: post.content ?? '',
         media: [],
@@ -28,6 +28,13 @@ export default function Edit({ post, socialAccounts }) {
         scheduled_at: toDateTimeLocal(post.scheduled_at),
         _method: 'put',
     });
+
+    transform((formData) => ({
+        ...formData,
+        scheduled_at: formData.scheduled_at
+            ? new Date(formData.scheduled_at).toISOString()
+            : '',
+    }));
 
     const handleSubmit = (e) => {
         e.preventDefault();

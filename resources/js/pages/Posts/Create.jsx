@@ -4,12 +4,19 @@ import { store } from '@/routes/posts';
 import PostForm from './PostForm';
 
 export default function Create({ socialAccounts }) {
-    const { data, setData, post, processing, errors } = useForm({
+    const { data, setData, post, processing, errors, transform } = useForm({
         social_account_ids: [],
         content: '',
         media: [],
         scheduled_at: '',
     });
+
+    transform((formData) => ({
+        ...formData,
+        scheduled_at: formData.scheduled_at
+            ? new Date(formData.scheduled_at).toISOString()
+            : '',
+    }));
 
     const handleSubmit = (e) => {
         e.preventDefault();

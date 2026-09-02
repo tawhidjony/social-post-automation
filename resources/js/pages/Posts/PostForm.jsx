@@ -126,6 +126,7 @@ export default function PostForm({
                         onChange={(e) => setData('scheduled_at', e.target.value)}
                         className="w-full border-gray-200 rounded-lg"
                     />
+                    <p className="text-xs text-gray-400 mt-1">Times are in your local timezone.</p>
                     {errors.scheduled_at && (
                         <p className="text-red-500 text-xs mt-1">{errors.scheduled_at}</p>
                     )}

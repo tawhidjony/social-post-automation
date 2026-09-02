@@ -1,9 +1,9 @@
 <?php
 
+use App\Jobs\PublishSocialPostJob;
+use App\Models\Post;
 use Illuminate\Foundation\Inspiring;
 use Illuminate\Support\Facades\Artisan;
-use App\Models\Post;
-use App\Jobs\PublishSocialPostJob;
 use Illuminate\Support\Facades\Schedule;
 
 Artisan::command('inspire', function () {
@@ -19,4 +19,4 @@ Schedule::call(function () {
         $post->update(['status' => 'processing']);
         PublishSocialPostJob::dispatch($post);
     }
-})->everyMinute();
+})->name('publish-due-social-posts')->everyMinute()->withoutOverlapping();
