@@ -14,6 +14,10 @@ test('guests are redirected from posts index', function () {
 test('authenticated users can store a scheduled post', function () {
     Storage::fake('public');
 
+    Storage::disk('public')->put('posts_media/default-placeholder.png', 'placeholder');
+
+    config(['post.default_media_path' => 'posts_media/default-placeholder.png']);
+
     $user = User::factory()->create();
     $workspace = $user->ensureCurrentWorkspace();
     $account = SocialAccount::factory()->create([

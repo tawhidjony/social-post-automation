@@ -22,19 +22,26 @@ class PublishSocialPostJob implements ShouldQueue
         $hasPublished = false;
 
         foreach ($this->post->targets as $target) {
+            if ($target->status === 'published') {
+                $hasPublished = true;
+
+                continue;
+            }
+
             $account = $target->socialAccount;
 
-            if (!$account || !$account->is_active) {
+            if (! $account || ! $account->is_active) {
                 $target->update([
                     'status' => 'failed',
                     'error_message' => 'Social account is inactive or missing.',
                 ]);
                 $hasFailed = true;
+
                 continue;
             }
 
             $result = match ($account->provider) {
-                'facebook' => (new FacebookPublisher())->publish($this->post, $account),
+                'facebook' => app(FacebookPublisher::class)->publish($this->post, $account),
                 default => ['success' => false, 'error' => 'Unsupported platform publisher.'],
             };
 
@@ -55,7 +62,7 @@ class PublishSocialPostJob implements ShouldQueue
         }
 
         $finalStatus = match (true) {
-            $hasPublished && !$hasFailed => 'published',
+            $hasPublished && ! $hasFailed => 'published',
             $hasPublished && $hasFailed => 'partially_failed',
             default => 'failed',
         };

@@ -44,6 +44,42 @@ function targetNames(post) {
         .join(', ');
 }
 
+const actionButtonClasses =
+    'inline-flex items-center px-3 py-1.5 rounded-md text-xs font-medium transition';
+
+function ActionButton({ href, onClick, variant = 'default', disabled = false, children }) {
+    const variants = {
+        view: 'bg-blue-600 text-white hover:bg-blue-700',
+        edit: 'bg-gray-100 text-gray-800 hover:bg-gray-200',
+        delete: 'bg-red-600 text-white hover:bg-red-700',
+        disabled: 'bg-gray-100 text-gray-400 cursor-not-allowed',
+    };
+
+    const className = `${actionButtonClasses} ${disabled ? variants.disabled : variants[variant]}`;
+
+    if (disabled) {
+        return (
+            <span className={className} aria-disabled="true">
+                {children}
+            </span>
+        );
+    }
+
+    if (href) {
+        return (
+            <Link href={href} className={className}>
+                {children}
+            </Link>
+        );
+    }
+
+    return (
+        <button type="button" onClick={onClick} className={className}>
+            {children}
+        </button>
+    );
+}
+
 export default function Index({ posts }) {
     const handleDelete = (post) => {
         if (!confirm('Delete this post?')) {
@@ -133,30 +169,24 @@ export default function Index({ posts }) {
                                                 </span>
                                             </td>
                                             <td className="px-6 py-4 text-right whitespace-nowrap">
-                                                <div className="inline-flex items-center gap-3">
-                                                    <Link
-                                                        href={show.url(post.id)}
-                                                        className="text-sm text-blue-600 hover:underline"
-                                                    >
+                                                <div className="inline-flex items-center justify-end gap-2">
+                                                    <ActionButton href={show.url(post.id)} variant="view">
                                                         View
-                                                    </Link>
-                                                    {isEditable(post.status) && (
-                                                        <>
-                                                            <Link
-                                                                href={edit.url(post.id)}
-                                                                className="text-sm text-gray-700 hover:underline"
-                                                            >
-                                                                Edit
-                                                            </Link>
-                                                            <button
-                                                                type="button"
-                                                                onClick={() => handleDelete(post)}
-                                                                className="text-sm text-red-600 hover:underline"
-                                                            >
-                                                                Delete
-                                                            </button>
-                                                        </>
-                                                    )}
+                                                    </ActionButton>
+                                                    <ActionButton
+                                                        href={isEditable(post.status) ? edit.url(post.id) : null}
+                                                        variant="edit"
+                                                        disabled={!isEditable(post.status)}
+                                                    >
+                                                        Edit
+                                                    </ActionButton>
+                                                    <ActionButton
+                                                        variant="delete"
+                                                        disabled={!isEditable(post.status)}
+                                                        onClick={() => handleDelete(post)}
+                                                    >
+                                                        Delete
+                                                    </ActionButton>
                                                 </div>
                                             </td>
                                         </tr>
