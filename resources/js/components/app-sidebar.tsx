@@ -14,8 +14,8 @@ import {
     SidebarMenuItem,
 } from '@/components/ui/sidebar';
 import { dashboard } from '@/routes';
-import { index } from "@/routes/social-accounts"; 
-import { create, store } from "@/routes/posts"; 
+import { index as socialAccountsIndex } from '@/routes/social-accounts';
+import { index as postsIndex } from '@/routes/posts';
 import type { NavItem } from '@/types';
 
 const mainNavItems: NavItem[] = [
@@ -26,12 +26,12 @@ const mainNavItems: NavItem[] = [
     },
     {
         title: 'Social Accounts',
-        href: index(),
+        href: socialAccountsIndex(),
         icon: LayoutGrid,
     },
     {
-        title: 'Create Post',
-        href: create(),
+        title: 'Posts',
+        href: postsIndex(),
         icon: LayoutGrid,
     },
 ];

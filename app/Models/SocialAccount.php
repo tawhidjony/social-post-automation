@@ -2,13 +2,18 @@
 
 namespace App\Models;
 
+use Database\Factories\SocialAccountFactory;
+use Illuminate\Database\Eloquent\Casts\Attribute;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Support\Facades\Crypt;
 
 class SocialAccount extends Model
 {
+    /** @use HasFactory<SocialAccountFactory> */
+    use HasFactory;
+
     protected $fillable = [
         'workspace_id',
         'provider',

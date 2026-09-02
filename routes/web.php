@@ -1,8 +1,8 @@
 <?php
 
-use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\SocialAccountController;
 use App\Http\Controllers\PostController;
+use App\Http\Controllers\SocialAccountController;
+use Illuminate\Support\Facades\Route;
 
 Route::inertia('/', 'welcome')->name('home');
 
@@ -12,8 +12,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/social/{provider}/redirect', [SocialAccountController::class, 'redirect'])->name('social.redirect');
     Route::get('/social/{provider}/callback', [SocialAccountController::class, 'callback'])->name('social.callback');
 
-    Route::get('/posts/create', [PostController::class, 'create'])->name('posts.create');
-    Route::post('/posts', [PostController::class, 'store'])->name('posts.store');
+    Route::resource('posts', PostController::class);
 });
 
 require __DIR__.'/settings.php';
