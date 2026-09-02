@@ -7,12 +7,13 @@ use Database\Factories\UserFactory;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Attributes\Hidden;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Str;
 use Laravel\Fortify\TwoFactorAuthenticatable;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 /**
  * @property int $id
@@ -55,6 +56,39 @@ class User extends Authenticatable
 
     public function workspaces(): BelongsToMany
     {
-        return $this->belongsToMany(Workspace::class)->withPivot('role')->withTimestamps();
+        return $this->belongsToMany(Workspace::class, 'workspace_user')->withPivot('role')->withTimestamps();
+    }
+
+    public function ensureCurrentWorkspace(): Workspace
+    {
+        if ($this->current_workspace_id !== null) {
+            $workspace = $this->currentWorkspace;
+
+            if ($workspace !== null) {
+                return $workspace;
+            }
+        }
+
+        $name = "{$this->name}'s Workspace";
+        $baseSlug = Str::slug($name) ?: 'workspace';
+        $slug = $baseSlug;
+        $suffix = 1;
+
+        while (Workspace::query()->where('slug', $slug)->exists()) {
+            $slug = $baseSlug.'-'.$suffix;
+            $suffix++;
+        }
+
+        $workspace = Workspace::query()->create([
+            'owner_id' => $this->id,
+            'name' => $name,
+            'slug' => $slug,
+        ]);
+
+        $this->workspaces()->attach($workspace->id, ['role' => 'owner']);
+
+        $this->forceFill(['current_workspace_id' => $workspace->id])->save();
+
+        return $workspace;
     }
 }

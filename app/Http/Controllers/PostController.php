@@ -12,7 +12,7 @@ class PostController extends Controller
 {
     public function create(Request $request): Response
     {
-        $workspaceId = $request->user()->current_workspace_id;
+        $workspaceId = $request->user()->ensureCurrentWorkspace()->id;
 
         $socialAccounts = SocialAccount::where('workspace_id', $workspaceId)
             ->where('is_active', true)
@@ -34,14 +34,14 @@ class PostController extends Controller
             'scheduled_at' => 'required|date|after:now',
         ]);
 
-        $workspaceId = $request->user()->current_workspace_id;
+        $workspaceId = $request->user()->ensureCurrentWorkspace()->id;
 
         // Upload media files
         $mediaUrls = [];
         if ($request->hasFile('media')) {
             foreach ($request->file('media') as $file) {
                 $path = $file->store('posts_media', 'public');
-                $mediaUrls[] = asset('storage/' . $path);
+                $mediaUrls[] = asset('storage/'.$path);
             }
         }
 
