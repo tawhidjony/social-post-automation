@@ -1,7 +1,12 @@
-FROM ubuntu
+FROM ubuntu:24.04
 
-RUN apt update
+ENV DEBIAN_FRONTEND=noninteractive
 
-RUN apt install nginx -y
+RUN apt-get update \
+    && apt-get install -y --no-install-recommends nginx openssl \
+    && rm -rf /var/lib/apt/lists/*
+
 COPY ./conf.nginx /etc/nginx/sites-available/default
-CMD nginx -g 'daemon off;'
+RUN ln -sf /etc/nginx/sites-available/default /etc/nginx/sites-enabled/default
+
+CMD ["nginx", "-g", "daemon off;"]

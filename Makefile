@@ -1,5 +1,33 @@
 up:
 	docker compose up -d
+certs:
+	chmod +x .docker/nginx/certs/generate-certs.sh
+	LOCAL_DOMAIN=$${LOCAL_DOMAIN:-social-post-automation.test} .docker/nginx/certs/generate-certs.sh
+	docker compose restart nginx
+mkcert-install:
+	chmod +x .docker/bin/install-mkcert.sh
+	.docker/bin/install-mkcert.sh
+	@echo ""
+	@echo "Next: make mkcert-ca-install && make certs-mkcert"
+mkcert-ca-install:
+	@MKCERT_BIN=$$(pwd)/.docker/bin/mkcert; \
+	if [ ! -x "$$MKCERT_BIN" ] && command -v mkcert >/dev/null 2>&1; then MKCERT_BIN=$$(command -v mkcert); fi; \
+	if [ ! -x "$$MKCERT_BIN" ]; then echo "Run make mkcert-install first" >&2; exit 1; fi; \
+	echo "Installing mkcert local CA (sudo password required once)..."; \
+	"$$MKCERT_BIN" -install
+certs-mkcert:
+	chmod +x .docker/nginx/certs/generate-certs.sh
+	CERT_METHOD=mkcert LOCAL_DOMAIN=$${LOCAL_DOMAIN:-social-post-automation.test} .docker/nginx/certs/generate-certs.sh
+	docker compose restart nginx
+hosts:
+	@echo "Add this line to /etc/hosts (requires sudo):"
+	@echo ""
+	@echo "  echo '127.0.0.1 social-post-automation.test' | sudo tee -a /etc/hosts"
+	@echo ""
+	@echo "Then visit: https://social-post-automation.test"
+	@echo "HTTP redirect: http://social-post-automation.test:8080"
+hosts-install:
+	@grep -q 'social-post-automation.test' /etc/hosts && echo "Already in /etc/hosts" || echo '127.0.0.1 social-post-automation.test' | sudo tee -a /etc/hosts
 show-c:
 	docker ps -a
 show-i:

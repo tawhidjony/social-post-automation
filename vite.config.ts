@@ -31,6 +31,22 @@ export default defineConfig({
     server: {
         host: true,
         port: 5173,
+        strictPort: true,
+        ...(process.env.VITE_DEV_SERVER_ORIGIN
+            ? { origin: process.env.VITE_DEV_SERVER_ORIGIN }
+            : {}),
+        ...(process.env.VITE_DEV_SERVER_HOST
+            ? {
+                  ws: {
+                      host: process.env.VITE_DEV_SERVER_HOST,
+                      protocol: 'wss',
+                      clientPort: Number(
+                          process.env.VITE_DEV_SERVER_CLIENT_PORT ?? 443,
+                      ),
+                      path: '/vite-hmr',
+                  },
+              }
+            : {}),
         watch: {
             ignored: [
                 '**/.agents/**',

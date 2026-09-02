@@ -2,14 +2,14 @@ services:
     php:
         build: ./.docker/php
         container_name: tawhidjony-php
-        ports:
-            - "8080:8080"
-            - "5173:5173"
         volumes:
             - .:/src
         environment:
             SERVER_HOST: 0.0.0.0
             SERVER_PORT: "8080"
+            VITE_DEV_SERVER_ORIGIN: https://${LOCAL_DOMAIN:-social-post-automation.test}
+            VITE_DEV_SERVER_HOST: ${LOCAL_DOMAIN:-social-post-automation.test}
+            VITE_DEV_SERVER_CLIENT_PORT: "443"
         stdin_open: true
         tty: true
         depends_on:
@@ -21,9 +21,11 @@ services:
         build: ./.docker/nginx
         container_name: tawhidjony-nginx
         ports:
-            - 8010:80
+            - "8080:80"
+            - "443:443"
         volumes:
             - .:/src
+            - ./.docker/nginx/certs:/etc/nginx/certs:ro
         networks:
             - tawhidjony
         depends_on:
