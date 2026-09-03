@@ -16,12 +16,18 @@ import {
 import { dashboard } from '@/routes';
 import { index as socialAccountsIndex } from '@/routes/social-accounts';
 import { index as postsIndex } from '@/routes/posts';
+import { index as workspacesIndex } from '@/routes/workspaces';
 import type { NavItem } from '@/types';
 
 const mainNavItems: NavItem[] = [
     {
         title: 'Dashboard',
         href: dashboard(),
+        icon: LayoutGrid,
+    },
+    {
+        title: 'Workspaces',
+        href: workspacesIndex(),
         icon: LayoutGrid,
     },
     {

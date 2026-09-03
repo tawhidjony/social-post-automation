@@ -1,0 +1,207 @@
+<mxfile host="app.diagrams.net" agent="Cursor" version="24.7.17">
+  <diagram id="domain-erd" name="Domain ERD">
+    <mxGraphModel dx="1400" dy="900" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1600" pageHeight="1200" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+
+        <!-- users -->
+        <mxCell id="users" value="users" style="swimlane;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=30;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=0;marginBottom=0;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=14;" vertex="1" parent="1">
+          <mxGeometry x="40" y="40" width="280" height="280" as="geometry" />
+        </mxCell>
+        <mxCell id="users_pk" value="PK  id : bigint" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=12;fontStyle=1" vertex="1" parent="users">
+          <mxGeometry y="30" width="280" height="26" as="geometry" />
+        </mxCell>
+        <mxCell id="users_name" value="name : string" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=12;" vertex="1" parent="users">
+          <mxGeometry y="56" width="280" height="26" as="geometry" />
+        </mxCell>
+        <mxCell id="users_email" value="UQ  email : string" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=12;" vertex="1" parent="users">
+          <mxGeometry y="82" width="280" height="26" as="geometry" />
+        </mxCell>
+        <mxCell id="users_email_verified" value="email_verified_at : timestamp?" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=12;" vertex="1" parent="users">
+          <mxGeometry y="108" width="280" height="26" as="geometry" />
+        </mxCell>
+        <mxCell id="users_password" value="password : string" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=12;" vertex="1" parent="users">
+          <mxGeometry y="134" width="280" height="26" as="geometry" />
+        </mxCell>
+        <mxCell id="users_2fa" value="two_factor_secret / recovery_codes / confirmed_at" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=12;" vertex="1" parent="users">
+          <mxGeometry y="160" width="280" height="26" as="geometry" />
+        </mxCell>
+        <mxCell id="users_cws" value="current_workspace_id : bigint?  (logical FK)" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=12;" vertex="1" parent="users">
+          <mxGeometry y="186" width="280" height="26" as="geometry" />
+        </mxCell>
+        <mxCell id="users_remember" value="remember_token : string?" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=12;" vertex="1" parent="users">
+          <mxGeometry y="212" width="280" height="26" as="geometry" />
+        </mxCell>
+        <mxCell id="users_ts" value="created_at / updated_at" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=12;" vertex="1" parent="users">
+          <mxGeometry y="238" width="280" height="26" as="geometry" />
+        </mxCell>
+
+        <!-- workspaces -->
+        <mxCell id="workspaces" value="workspaces" style="swimlane;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=30;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=0;marginBottom=0;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=14;" vertex="1" parent="1">
+          <mxGeometry x="420" y="40" width="260" height="180" as="geometry" />
+        </mxCell>
+        <mxCell id="ws_pk" value="PK  id : bigint" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=12;fontStyle=1" vertex="1" parent="workspaces">
+          <mxGeometry y="30" width="260" height="26" as="geometry" />
+        </mxCell>
+        <mxCell id="ws_owner" value="FK  owner_id : bigint? → users.id (nullOnDelete)" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=12;" vertex="1" parent="workspaces">
+          <mxGeometry y="56" width="260" height="26" as="geometry" />
+        </mxCell>
+        <mxCell id="ws_name" value="name : string" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=12;" vertex="1" parent="workspaces">
+          <mxGeometry y="82" width="260" height="26" as="geometry" />
+        </mxCell>
+        <mxCell id="ws_slug" value="UQ  slug : string" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=12;" vertex="1" parent="workspaces">
+          <mxGeometry y="108" width="260" height="26" as="geometry" />
+        </mxCell>
+        <mxCell id="ws_ts" value="created_at / updated_at" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=12;" vertex="1" parent="workspaces">
+          <mxGeometry y="134" width="260" height="26" as="geometry" />
+        </mxCell>
+
+        <!-- workspace_user -->
+        <mxCell id="workspace_user" value="workspace_user" style="swimlane;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=30;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=0;marginBottom=0;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=14;" vertex="1" parent="1">
+          <mxGeometry x="40" y="400" width="300" height="210" as="geometry" />
+        </mxCell>
+        <mxCell id="wu_pk" value="PK  id : bigint" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=12;fontStyle=1" vertex="1" parent="workspace_user">
+          <mxGeometry y="30" width="300" height="26" as="geometry" />
+        </mxCell>
+        <mxCell id="wu_ws" value="FK  workspace_id → workspaces.id (cascade)" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=12;" vertex="1" parent="workspace_user">
+          <mxGeometry y="56" width="300" height="26" as="geometry" />
+        </mxCell>
+        <mxCell id="wu_user" value="FK  user_id → users.id (cascade)" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=12;" vertex="1" parent="workspace_user">
+          <mxGeometry y="82" width="300" height="26" as="geometry" />
+        </mxCell>
+        <mxCell id="wu_role" value="role : string (owner | admin | editor)" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=12;" vertex="1" parent="workspace_user">
+          <mxGeometry y="108" width="300" height="26" as="geometry" />
+        </mxCell>
+        <mxCell id="wu_uq" value="UQ  (workspace_id, user_id)" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=12;" vertex="1" parent="workspace_user">
+          <mxGeometry y="134" width="300" height="26" as="geometry" />
+        </mxCell>
+        <mxCell id="wu_ts" value="created_at / updated_at" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=12;" vertex="1" parent="workspace_user">
+          <mxGeometry y="160" width="300" height="26" as="geometry" />
+        </mxCell>
+
+        <!-- social_accounts -->
+        <mxCell id="social_accounts" value="social_accounts" style="swimlane;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=30;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=0;marginBottom=0;fillColor=#e1d5e7;strokeColor=#9673a6;fontSize=14;" vertex="1" parent="1">
+          <mxGeometry x="760" y="40" width="340" height="320" as="geometry" />
+        </mxCell>
+        <mxCell id="sa_pk" value="PK  id : bigint" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=12;fontStyle=1" vertex="1" parent="social_accounts">
+          <mxGeometry y="30" width="340" height="26" as="geometry" />
+        </mxCell>
+        <mxCell id="sa_ws" value="FK  workspace_id → workspaces.id (cascade)" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=12;" vertex="1" parent="social_accounts">
+          <mxGeometry y="56" width="340" height="26" as="geometry" />
+        </mxCell>
+        <mxCell id="sa_provider" value="provider : string (facebook, instagram, linkedin, twitter)" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=12;" vertex="1" parent="social_accounts">
+          <mxGeometry y="82" width="340" height="26" as="geometry" />
+        </mxCell>
+        <mxCell id="sa_paid" value="provider_account_id : string" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=12;" vertex="1" parent="social_accounts">
+          <mxGeometry y="108" width="340" height="26" as="geometry" />
+        </mxCell>
+        <mxCell id="sa_name" value="name : string" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=12;" vertex="1" parent="social_accounts">
+          <mxGeometry y="134" width="340" height="26" as="geometry" />
+        </mxCell>
+        <mxCell id="sa_username" value="username : string?" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=12;" vertex="1" parent="social_accounts">
+          <mxGeometry y="160" width="340" height="26" as="geometry" />
+        </mxCell>
+        <mxCell id="sa_avatar" value="avatar_url : text?" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=12;" vertex="1" parent="social_accounts">
+          <mxGeometry y="186" width="340" height="26" as="geometry" />
+        </mxCell>
+        <mxCell id="sa_tokens" value="access_token / refresh_token? (encrypted)" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=12;" vertex="1" parent="social_accounts">
+          <mxGeometry y="212" width="340" height="26" as="geometry" />
+        </mxCell>
+        <mxCell id="sa_expires" value="token_expires_at : timestamp? | is_active : bool" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=12;" vertex="1" parent="social_accounts">
+          <mxGeometry y="238" width="340" height="26" as="geometry" />
+        </mxCell>
+        <mxCell id="sa_uq" value="UQ  (workspace_id, provider, provider_account_id)" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=12;" vertex="1" parent="social_accounts">
+          <mxGeometry y="264" width="340" height="26" as="geometry" />
+        </mxCell>
+
+        <!-- posts -->
+        <mxCell id="posts" value="posts" style="swimlane;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=30;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=0;marginBottom=0;fillColor=#f8cecc;strokeColor=#b85450;fontSize=14;" vertex="1" parent="1">
+          <mxGeometry x="420" y="400" width="320" height="250" as="geometry" />
+        </mxCell>
+        <mxCell id="posts_pk" value="PK  id : bigint" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=12;fontStyle=1" vertex="1" parent="posts">
+          <mxGeometry y="30" width="320" height="26" as="geometry" />
+        </mxCell>
+        <mxCell id="posts_ws" value="FK  workspace_id → workspaces.id (cascade)" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=12;" vertex="1" parent="posts">
+          <mxGeometry y="56" width="320" height="26" as="geometry" />
+        </mxCell>
+        <mxCell id="posts_user" value="FK  user_id → users.id (cascade)" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=12;" vertex="1" parent="posts">
+          <mxGeometry y="82" width="320" height="26" as="geometry" />
+        </mxCell>
+        <mxCell id="posts_content" value="content : text?" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=12;" vertex="1" parent="posts">
+          <mxGeometry y="108" width="320" height="26" as="geometry" />
+        </mxCell>
+        <mxCell id="posts_media" value="media : json? (S3/R2 URLs &amp; types)" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=12;" vertex="1" parent="posts">
+          <mxGeometry y="134" width="320" height="26" as="geometry" />
+        </mxCell>
+        <mxCell id="posts_scheduled" value="scheduled_at : timestamp?" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=12;" vertex="1" parent="posts">
+          <mxGeometry y="160" width="320" height="26" as="geometry" />
+        </mxCell>
+        <mxCell id="posts_status" value="status : enum (draft|scheduled|processing|published|partially_failed|failed)" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=11;" vertex="1" parent="posts">
+          <mxGeometry y="186" width="320" height="26" as="geometry" />
+        </mxCell>
+        <mxCell id="posts_ts" value="created_at / updated_at" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=12;" vertex="1" parent="posts">
+          <mxGeometry y="212" width="320" height="26" as="geometry" />
+        </mxCell>
+
+        <!-- post_targets -->
+        <mxCell id="post_targets" value="post_targets" style="swimlane;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=30;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=0;marginBottom=0;fillColor=#ffe6cc;strokeColor=#d79b00;fontSize=14;" vertex="1" parent="1">
+          <mxGeometry x="820" y="420" width="300" height="230" as="geometry" />
+        </mxCell>
+        <mxCell id="pt_pk" value="PK  id : bigint" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=12;fontStyle=1" vertex="1" parent="post_targets">
+          <mxGeometry y="30" width="300" height="26" as="geometry" />
+        </mxCell>
+        <mxCell id="pt_post" value="FK  post_id → posts.id (cascade)" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=12;" vertex="1" parent="post_targets">
+          <mxGeometry y="56" width="300" height="26" as="geometry" />
+        </mxCell>
+        <mxCell id="pt_sa" value="FK  social_account_id → social_accounts.id (cascade)" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=12;" vertex="1" parent="post_targets">
+          <mxGeometry y="82" width="300" height="26" as="geometry" />
+        </mxCell>
+        <mxCell id="pt_status" value="status : enum (pending|published|failed)" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=12;" vertex="1" parent="post_targets">
+          <mxGeometry y="108" width="300" height="26" as="geometry" />
+        </mxCell>
+        <mxCell id="pt_platform" value="platform_post_id : string?" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=12;" vertex="1" parent="post_targets">
+          <mxGeometry y="134" width="300" height="26" as="geometry" />
+        </mxCell>
+        <mxCell id="pt_error" value="error_message : text?" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=12;" vertex="1" parent="post_targets">
+          <mxGeometry y="160" width="300" height="26" as="geometry" />
+        </mxCell>
+        <mxCell id="pt_published" value="published_at : timestamp? | timestamps" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=12;" vertex="1" parent="post_targets">
+          <mxGeometry y="186" width="300" height="26" as="geometry" />
+        </mxCell>
+
+        <!-- Relationships -->
+        <mxCell id="rel_owns" value="owns 1:N" style="endArrow=ERmany;startArrow=ERone;html=1;rounded=0;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;fontSize=11;" edge="1" parent="1" source="ws_owner" target="users_pk">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="rel_current" value="current  N:0..1" style="endArrow=ERone;startArrow=ERmany;html=1;rounded=0;dashed=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.75;entryDx=0;entryDy=0;fontSize=11;" edge="1" parent="1" source="users_cws" target="workspaces">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="360" y="250" as="sourcePoint" />
+            <mxPoint x="420" y="180" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="rel_wu_user" value="member N:M via pivot" style="endArrow=ERmany;startArrow=ERone;html=1;rounded=0;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.25;entryY=0;entryDx=0;entryDy=0;fontSize=11;" edge="1" parent="1" source="users" target="workspace_user">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="rel_wu_ws" value="" style="endArrow=ERmany;startArrow=ERone;html=1;rounded=0;exitX=0;exitY=1;exitDx=0;exitDy=0;entryX=1;entryY=0.25;entryDx=0;entryDy=0;fontSize=11;" edge="1" parent="1" source="workspaces" target="workspace_user">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="rel_ws_sa" value="1:N" style="endArrow=ERmany;startArrow=ERone;html=1;rounded=0;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.25;entryDx=0;entryDy=0;fontSize=11;" edge="1" parent="1" source="workspaces" target="social_accounts">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="rel_ws_posts" value="1:N" style="endArrow=ERmany;startArrow=ERone;html=1;rounded=0;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;fontSize=11;" edge="1" parent="1" source="workspaces" target="posts">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="rel_user_posts" value="authors 1:N" style="endArrow=ERmany;startArrow=ERone;html=1;rounded=0;exitX=1;exitY=0.85;exitDx=0;exitDy=0;entryX=0;entryY=0.35;entryDx=0;entryDy=0;fontSize=11;" edge="1" parent="1" source="users" target="posts">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="rel_post_targets" value="1:N" style="endArrow=ERmany;startArrow=ERone;html=1;rounded=0;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.35;entryDx=0;entryDy=0;fontSize=11;" edge="1" parent="1" source="posts" target="post_targets">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="rel_sa_targets" value="1:N" style="endArrow=ERmany;startArrow=ERone;html=1;rounded=0;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;fontSize=11;" edge="1" parent="1" source="social_accounts" target="post_targets">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

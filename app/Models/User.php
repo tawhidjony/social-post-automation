@@ -91,4 +91,28 @@ class User extends Authenticatable
 
         return $workspace;
     }
+
+    public function workspaceRole(Workspace $workspace): ?string
+    {
+        $membership = $this->workspaces()
+            ->where('workspaces.id', $workspace->id)
+            ->first();
+
+        return $membership?->pivot?->role;
+    }
+
+    public function isWorkspaceMember(Workspace $workspace): bool
+    {
+        return $this->workspaceRole($workspace) !== null;
+    }
+
+    public function isWorkspaceAdmin(Workspace $workspace): bool
+    {
+        return in_array($this->workspaceRole($workspace), ['owner', 'admin'], true);
+    }
+
+    public function isWorkspaceOwner(Workspace $workspace): bool
+    {
+        return $this->workspaceRole($workspace) === 'owner';
+    }
 }
