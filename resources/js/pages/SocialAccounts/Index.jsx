@@ -10,18 +10,39 @@ export default function Index({ accounts }) {
     return (
         <>
             <Head title="Social Accounts" />
-            <div className="max-w-7xl mx-auto py-10 px-4 sm:px-6 lg:px-8">
+            <div className="py-10 px-4 sm:px-6 lg:px-8">
+                <div className="flex items-center justify-between mb-md">
+                    <div className="flex items-center gap-sm">
+                        {/* Used text-foreground to match standard shadcn headers */}
+                        <h2 className="text-headline-md text-foreground">Active Channels</h2>
+
+                        {/* Changed text-card to text-secondary-foreground for standard badge color-contrast structure */}
+                        <span className="px-sm py-xs rounded-full bg-secondary text-secondary-foreground text-label-md">
+                            4
+                        </span>
+                    </div>
+
+                    {/* Replaced text-on-surface-variant with text-muted-foreground and fixed the icon token color */}
+                    <div className="flex items-center gap-xs text-muted-foreground text-metadata-sm">
+                        <span className="material-symbols-outlined text-[16px] text-primary">
+                            schedule
+                        </span>
+                        <span>Auto-refresh enabled (every 15m)</span>
+                    </div>
+                </div>
+
+
                 <div className="flex justify-between items-center mb-6">
                     <h1 className="text-2xl font-bold text-gray-900">Connected Accounts</h1>
-                    
+
                     <div className="flex gap-2">
 
-<button
-    onClick={() => window.location.href = redirect({ provider: 'facebook' }).url}
-    className="bg-blue-600 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-blue-700 transition"
->
-    + Connect Facebook Page
-</button>
+                        <button
+                            onClick={() => window.location.href = redirect({ provider: 'facebook' }).url}
+                            className="bg-blue-600 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-blue-700 transition"
+                        >
+                            + Connect Facebook Page
+                        </button>
 
 
                     </div>
@@ -45,9 +66,8 @@ export default function Index({ accounts }) {
                                     </div>
                                 </div>
                                 <div>
-                                    <span className={`px-3 py-1 text-xs rounded-full font-semibold ${
-                                        account.is_active ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'
-                                    }`}>
+                                    <span className={`px-3 py-1 text-xs rounded-full font-semibold ${account.is_active ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'
+                                        }`}>
                                         {account.is_active ? 'Connected' : 'Disconnected'}
                                     </span>
                                 </div>
