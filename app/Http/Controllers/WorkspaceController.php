@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreWorkspaceRequest;
 use App\Http\Requests\UpdateWorkspaceRequest;
+use App\Models\Plan;
 use App\Models\User;
 use App\Models\Workspace;
 use Illuminate\Http\RedirectResponse;
@@ -55,6 +56,7 @@ class WorkspaceController extends Controller
             'owner_id' => $user->id,
             'name' => $validated['name'],
             'slug' => $validated['slug'],
+            'current_plan_id' => Plan::query()->where('slug', 'free')->value('id'),
         ]);
 
         $user->workspaces()->attach($workspace->id, ['role' => 'owner']);

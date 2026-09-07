@@ -83,6 +83,7 @@ class User extends Authenticatable
             'owner_id' => $this->id,
             'name' => $name,
             'slug' => $slug,
+            'current_plan_id' => Plan::query()->where('slug', 'free')->value('id'),
         ]);
 
         $this->workspaces()->attach($workspace->id, ['role' => 'owner']);

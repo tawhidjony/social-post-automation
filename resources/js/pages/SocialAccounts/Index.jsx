@@ -93,7 +93,7 @@ export default function Index({ accounts, canManage = false, providers = ['faceb
                                                 : 'bg-red-100 text-red-700'
                                         }`}
                                     >
-                                        {account.is_active ? 'Active' : 'Inactive'}
+                                        {account.is_active ? 'Connected' : 'Disconnected'}
                                     </span>
                                     {canManage && (
                                         <>
