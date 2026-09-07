@@ -83,6 +83,7 @@ class User extends Authenticatable
             'owner_id' => $this->id,
             'name' => $name,
             'slug' => $slug,
+            'current_plan_id' => Plan::query()->where('slug', 'free')->value('id'),
         ]);
 
         $this->workspaces()->attach($workspace->id, ['role' => 'owner']);
@@ -90,5 +91,29 @@ class User extends Authenticatable
         $this->forceFill(['current_workspace_id' => $workspace->id])->save();
 
         return $workspace;
+    }
+
+    public function workspaceRole(Workspace $workspace): ?string
+    {
+        $membership = $this->workspaces()
+            ->where('workspaces.id', $workspace->id)
+            ->first();
+
+        return $membership?->pivot?->role;
+    }
+
+    public function isWorkspaceMember(Workspace $workspace): bool
+    {
+        return $this->workspaceRole($workspace) !== null;
+    }
+
+    public function isWorkspaceAdmin(Workspace $workspace): bool
+    {
+        return in_array($this->workspaceRole($workspace), ['owner', 'admin'], true);
+    }
+
+    public function isWorkspaceOwner(Workspace $workspace): bool
+    {
+        return $this->workspaceRole($workspace) === 'owner';
     }
 }

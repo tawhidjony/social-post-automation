@@ -2,6 +2,18 @@ import React from 'react';
 import { Head, Link, router } from '@inertiajs/react';
 import { destroy, edit, index } from '@/routes/posts';
 
+function targetStatusClasses(status) {
+    switch (status) {
+        case 'published':
+            return 'bg-green-100 text-green-700';
+        case 'failed':
+            return 'bg-red-100 text-red-700';
+        case 'pending':
+        default:
+            return 'bg-yellow-100 text-yellow-700';
+    }
+}
+
 export default function Show({ post, editable }) {
     const handleDelete = () => {
         if (!confirm('Delete this post?')) {
@@ -44,7 +56,9 @@ export default function Show({ post, editable }) {
                 <div className="bg-white shadow rounded-lg p-6 space-y-4">
                     <div className="flex items-center justify-between">
                         <span className="text-xs uppercase tracking-wide text-gray-400">Status</span>
-                        <span className="text-sm font-semibold capitalize">{post.status.replace('_', ' ')}</span>
+                        <span className="text-sm font-semibold capitalize">
+                            {post.status.replace(/_/g, ' ')}
+                        </span>
                     </div>
                     <div>
                         <span className="text-xs uppercase tracking-wide text-gray-400">Scheduled At</span>
@@ -85,18 +99,39 @@ export default function Show({ post, editable }) {
                         <div className="p-4 text-sm text-gray-500">No targets.</div>
                     ) : (
                         post.targets.map((target) => (
-                            <div key={target.id} className="p-4 flex items-center justify-between">
-                                <div>
-                                    <p className="font-medium text-gray-800">
-                                        {target.social_account?.name || 'Unknown account'}
+                            <div key={target.id} className="p-4 space-y-2">
+                                <div className="flex items-start justify-between gap-4">
+                                    <div>
+                                        <p className="font-medium text-gray-800">
+                                            {target.social_account?.name || 'Unknown account'}
+                                        </p>
+                                        <p className="text-xs text-gray-400 capitalize">
+                                            {target.social_account?.provider}
+                                        </p>
+                                    </div>
+                                    <span
+                                        className={`inline-flex px-3 py-1 text-xs rounded-full font-semibold capitalize ${targetStatusClasses(target.status)}`}
+                                    >
+                                        {target.status}
+                                    </span>
+                                </div>
+                                <div className="grid gap-1 text-xs text-gray-500 sm:grid-cols-2">
+                                    <p>
+                                        <span className="font-medium text-gray-600">Platform post ID:</span>{' '}
+                                        {target.platform_post_id || '—'}
                                     </p>
-                                    <p className="text-xs text-gray-400 capitalize">
-                                        {target.social_account?.provider}
+                                    <p>
+                                        <span className="font-medium text-gray-600">Published at:</span>{' '}
+                                        {target.published_at
+                                            ? new Date(target.published_at).toLocaleString()
+                                            : '—'}
                                     </p>
                                 </div>
-                                <span className="text-xs font-semibold capitalize text-gray-600">
-                                    {target.status}
-                                </span>
+                                {target.error_message && (
+                                    <p className="text-sm text-red-600 bg-red-50 rounded-md p-2">
+                                        {target.error_message}
+                                    </p>
+                                )}
                             </div>
                         ))
                     )}
