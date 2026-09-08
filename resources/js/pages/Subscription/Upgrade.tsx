@@ -66,12 +66,20 @@ export default function SubscriptionUpgrade({
                 <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
                     <Heading
                         title="Choose a plan"
-                        description={`Upgrade or change the plan for ${workspace.name}`}
+                        description={
+                            currentPlan
+                                ? `Upgrade or change the plan for ${workspace.name}`
+                                : `Select a plan to continue using ${workspace.name}`
+                        }
                     />
 
-                    <Button variant="ghost" asChild>
-                        <Link href={subscriptionIndex()}>Back to subscription</Link>
-                    </Button>
+                    {currentPlan && (
+                        <Button variant="ghost" asChild>
+                            <Link href={subscriptionIndex()}>
+                                Back to subscription
+                            </Link>
+                        </Button>
+                    )}
                 </div>
 
                 {error && (
@@ -152,11 +160,13 @@ export default function SubscriptionUpgrade({
                                                         className="w-full"
                                                         disabled={processing}
                                                     >
-                                                        {currentPlan &&
-                                                        plan.price >
-                                                            currentPlan.price
-                                                            ? `Upgrade to ${plan.name}`
-                                                            : `Switch to ${plan.name}`}
+                                                        {currentPlan === null
+                                                            ? `Choose ${plan.name}`
+                                                            : currentPlan &&
+                                                                plan.price >
+                                                                    currentPlan.price
+                                                              ? `Upgrade to ${plan.name}`
+                                                              : `Switch to ${plan.name}`}
                                                     </Button>
                                                 </>
                                             )}

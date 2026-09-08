@@ -95,7 +95,7 @@ test('posts publish due command reconciles processing posts when all targets are
 });
 
 test('authenticated users can store a post with an iso8601 scheduled_at', function () {
-    $user = User::factory()->create();
+    $user = User::factory()->withActivePlan()->create();
     $workspace = $user->ensureCurrentWorkspace();
     $account = SocialAccount::factory()->create([
         'workspace_id' => $workspace->id,

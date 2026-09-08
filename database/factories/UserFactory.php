@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 
+use App\Models\Plan;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Facades\Hash;
@@ -56,5 +57,24 @@ class UserFactory extends Factory
             'two_factor_recovery_codes' => encrypt(json_encode(['recovery-code-1'])),
             'two_factor_confirmed_at' => now(),
         ]);
+    }
+
+    /**
+     * Create a personal workspace with an active subscription plan.
+     */
+    public function withActivePlan(string $slug = 'free'): static
+    {
+        return $this->afterCreating(function (User $user) use ($slug): void {
+            $workspace = $user->ensureCurrentWorkspace();
+
+            $plan = Plan::query()->where('slug', $slug)->first()
+                ?? Plan::factory()->create([
+                    'name' => Str::title($slug),
+                    'slug' => $slug,
+                    'price' => $slug === 'free' ? 0 : 29,
+                ]);
+
+            $workspace->changePlan($plan);
+        });
     }
 }

@@ -1,6 +1,5 @@
 <?php
 
-use App\Models\Plan;
 use App\Models\User;
 use Database\Seeders\PlanSeeder;
 use Laravel\Fortify\Features;
@@ -25,14 +24,14 @@ test('new users can register', function () {
     ]);
 
     $this->assertAuthenticated();
-    $response->assertRedirect(route('dashboard', absolute: false));
+    $response->assertRedirect(route('subscription.upgrade', absolute: false));
 
     $user = User::query()->where('email', 'test@example.com')->first();
-    $freePlanId = Plan::query()->where('slug', 'free')->value('id');
 
     expect($user)->not->toBeNull()
         ->and($user->current_workspace_id)->not->toBeNull()
         ->and($user->workspaces)->toHaveCount(1)
         ->and($user->workspaces->first()->pivot->role)->toBe('owner')
-        ->and($user->workspaces->first()->current_plan_id)->toBe($freePlanId);
+        ->and($user->workspaces->first()->current_plan_id)->toBeNull()
+        ->and($user->workspaces->first()->hasActivePlan())->toBeFalse();
 });
