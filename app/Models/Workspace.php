@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Support\Facades\DB;
 
 class Workspace extends Model
 {
@@ -39,11 +40,49 @@ class Workspace extends Model
     }
 
     /**
-     * Get active subscription for the workspace.
+     * Get all subscriptions for the workspace.
+     */
+    public function subscriptions(): HasMany
+    {
+        return $this->hasMany(Subscription::class);
+    }
+
+    /**
+     * Get the latest active subscription for the workspace.
      */
     public function subscription(): HasOne
     {
-        return $this->hasOne(Subscription::class)->latestOfMany();
+        return $this->hasOne(Subscription::class)->ofMany(
+            ['id' => 'max'],
+            fn ($query) => $query->where('status', 'active'),
+        );
+    }
+
+    /**
+     * Cancel active subscriptions and switch the workspace to the given plan.
+     */
+    public function changePlan(Plan $plan): Subscription
+    {
+        return DB::transaction(function () use ($plan): Subscription {
+            $this->subscriptions()
+                ->where('status', 'active')
+                ->update([
+                    'status' => 'canceled',
+                    'ends_at' => now(),
+                ]);
+
+            $subscription = $this->subscriptions()->create([
+                'plan_id' => $plan->id,
+                'stripe_subscription_id' => null,
+                'status' => 'active',
+                'starts_at' => now(),
+                'ends_at' => null,
+            ]);
+
+            $this->update(['current_plan_id' => $plan->id]);
+
+            return $subscription;
+        });
     }
 
     /**

@@ -36,4 +36,9 @@ class Subscription extends Model
     {
         return $this->belongsTo(Plan::class);
     }
+
+    public function isActive(): bool
+    {
+        return $this->status === 'active';
+    }
 }

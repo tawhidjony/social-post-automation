@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\PostController;
 use App\Http\Controllers\SocialAccountController;
+use App\Http\Controllers\SubscriptionController;
 use App\Http\Controllers\WorkspaceController;
 use App\Http\Controllers\WorkspaceMemberController;
 use App\Http\Middleware\CheckMonthlyPostLimit;
@@ -28,6 +29,11 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
     Route::post('workspaces/{workspace}/switch', [WorkspaceController::class, 'switch'])->name('workspaces.switch');
     Route::resource('workspaces', WorkspaceController::class)->except(['show']);
+
+    Route::get('subscription', [SubscriptionController::class, 'index'])->name('subscription.index');
+    Route::get('subscription/upgrade', [SubscriptionController::class, 'upgrade'])->name('subscription.upgrade');
+    Route::post('subscription', [SubscriptionController::class, 'store'])->name('subscription.store');
+    Route::delete('subscription', [SubscriptionController::class, 'destroy'])->name('subscription.destroy');
 
     Route::get('workspaces/{workspace}/members', [WorkspaceMemberController::class, 'index'])->name('workspaces.members.index');
     Route::post('workspaces/{workspace}/members', [WorkspaceMemberController::class, 'store'])->name('workspaces.members.store');

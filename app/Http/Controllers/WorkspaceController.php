@@ -52,12 +52,18 @@ class WorkspaceController extends Controller
         $validated = $request->validated();
         $user = $request->user();
 
+        $freePlan = Plan::query()->where('slug', 'free')->first();
+
         $workspace = Workspace::query()->create([
             'owner_id' => $user->id,
             'name' => $validated['name'],
             'slug' => $validated['slug'],
-            'current_plan_id' => Plan::query()->where('slug', 'free')->value('id'),
+            'current_plan_id' => $freePlan?->id,
         ]);
+
+        if ($freePlan !== null) {
+            $workspace->changePlan($freePlan);
+        }
 
         $user->workspaces()->attach($workspace->id, ['role' => 'owner']);
 

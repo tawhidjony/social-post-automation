@@ -79,12 +79,18 @@ class User extends Authenticatable
             $suffix++;
         }
 
+        $freePlan = Plan::query()->where('slug', 'free')->first();
+
         $workspace = Workspace::query()->create([
             'owner_id' => $this->id,
             'name' => $name,
             'slug' => $slug,
-            'current_plan_id' => Plan::query()->where('slug', 'free')->value('id'),
+            'current_plan_id' => $freePlan?->id,
         ]);
+
+        if ($freePlan !== null) {
+            $workspace->changePlan($freePlan);
+        }
 
         $this->workspaces()->attach($workspace->id, ['role' => 'owner']);
 
