@@ -18,7 +18,7 @@ test('authenticated users can store a scheduled post', function () {
 
     config(['post.default_media_path' => 'posts_media/default-placeholder.png']);
 
-    $user = User::factory()->create();
+    $user = User::factory()->withActivePlan()->create();
     $workspace = $user->ensureCurrentWorkspace();
     $account = SocialAccount::factory()->create([
         'workspace_id' => $workspace->id,
@@ -46,7 +46,7 @@ test('authenticated users can store a scheduled post', function () {
 });
 
 test('index only lists posts for the current workspace', function () {
-    $user = User::factory()->create();
+    $user = User::factory()->withActivePlan()->create();
     $workspace = $user->ensureCurrentWorkspace();
 
     $ownPost = Post::factory()->create([
@@ -55,7 +55,7 @@ test('index only lists posts for the current workspace', function () {
         'content' => 'Mine',
     ]);
 
-    $otherUser = User::factory()->create();
+    $otherUser = User::factory()->withActivePlan()->create();
     $otherWorkspace = $otherUser->ensureCurrentWorkspace();
 
     Post::factory()->create([
@@ -76,13 +76,13 @@ test('index only lists posts for the current workspace', function () {
 });
 
 test('show update and destroy of another workspace post return not found', function () {
-    $user = User::factory()->create();
+    $user = User::factory()->withActivePlan()->create();
     $workspace = $user->ensureCurrentWorkspace();
     $account = SocialAccount::factory()->create([
         'workspace_id' => $workspace->id,
     ]);
 
-    $otherUser = User::factory()->create();
+    $otherUser = User::factory()->withActivePlan()->create();
     $otherWorkspace = $otherUser->ensureCurrentWorkspace();
     $foreignPost = Post::factory()->create([
         'user_id' => $otherUser->id,
@@ -107,7 +107,7 @@ test('show update and destroy of another workspace post return not found', funct
 });
 
 test('update and destroy are forbidden for processing and published posts', function () {
-    $user = User::factory()->create();
+    $user = User::factory()->withActivePlan()->create();
     $workspace = $user->ensureCurrentWorkspace();
     $account = SocialAccount::factory()->create([
         'workspace_id' => $workspace->id,
@@ -139,7 +139,7 @@ test('update and destroy are forbidden for processing and published posts', func
 });
 
 test('store validation fails without accounts or content and media', function () {
-    $user = User::factory()->create();
+    $user = User::factory()->withActivePlan()->create();
     $user->ensureCurrentWorkspace();
 
     $this->actingAs($user)
@@ -154,7 +154,7 @@ test('store validation fails without accounts or content and media', function ()
 });
 
 test('authenticated users can update a scheduled post', function () {
-    $user = User::factory()->create();
+    $user = User::factory()->withActivePlan()->create();
     $workspace = $user->ensureCurrentWorkspace();
     $account = SocialAccount::factory()->create([
         'workspace_id' => $workspace->id,
@@ -192,7 +192,7 @@ test('authenticated users can update a scheduled post', function () {
 });
 
 test('authenticated users can delete a scheduled post', function () {
-    $user = User::factory()->create();
+    $user = User::factory()->withActivePlan()->create();
     $workspace = $user->ensureCurrentWorkspace();
 
     $post = Post::factory()->create([

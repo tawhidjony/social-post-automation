@@ -9,7 +9,7 @@ test('guests are redirected from workspaces index', function () {
 });
 
 test('authenticated users can view their workspaces', function () {
-    $user = User::factory()->create();
+    $user = User::factory()->withActivePlan()->create();
     $workspace = $user->ensureCurrentWorkspace();
 
     $this->actingAs($user)
@@ -24,7 +24,7 @@ test('authenticated users can view their workspaces', function () {
 });
 
 test('authenticated users can create a workspace and switch to it', function () {
-    $user = User::factory()->create();
+    $user = User::factory()->withActivePlan()->create();
     $user->ensureCurrentWorkspace();
 
     $response = $this->actingAs($user)->post(route('workspaces.store'), [
@@ -39,12 +39,28 @@ test('authenticated users can create a workspace and switch to it', function () 
 
     expect($workspace)->not->toBeNull()
         ->and($workspace->owner_id)->toBe($user->id)
+        ->and($workspace->current_plan_id)->toBeNull()
+        ->and($workspace->hasActivePlan())->toBeFalse()
         ->and($user->fresh()->current_workspace_id)->toBe($workspace->id)
         ->and($user->workspaceRole($workspace))->toBe('owner');
 });
 
+test('creating a workspace and switching redirects to plan selection on next visit', function () {
+    $user = User::factory()->withActivePlan()->create();
+
+    $this->actingAs($user)->post(route('workspaces.store'), [
+        'name' => 'No Plan Team',
+        'slug' => 'no-plan-team',
+        'switch' => true,
+    ])->assertRedirect(route('workspaces.index'));
+
+    $this->actingAs($user->fresh())
+        ->get(route('workspaces.index'))
+        ->assertRedirect(route('subscription.upgrade'));
+});
+
 test('workspace store validation requires name and unique slug', function () {
-    $user = User::factory()->create();
+    $user = User::factory()->withActivePlan()->create();
     $existing = $user->ensureCurrentWorkspace();
 
     $this->actingAs($user)
@@ -58,7 +74,7 @@ test('workspace store validation requires name and unique slug', function () {
 });
 
 test('admins can update a workspace', function () {
-    $user = User::factory()->create();
+    $user = User::factory()->withActivePlan()->create();
     $workspace = $user->ensureCurrentWorkspace();
 
     $this->actingAs($user)
@@ -73,10 +89,10 @@ test('admins can update a workspace', function () {
 });
 
 test('editors cannot update a workspace', function () {
-    $owner = User::factory()->create();
+    $owner = User::factory()->withActivePlan()->create();
     $workspace = $owner->ensureCurrentWorkspace();
 
-    $editor = User::factory()->create();
+    $editor = User::factory()->withActivePlan()->create();
     $workspace->members()->attach($editor->id, ['role' => 'editor']);
     $editor->forceFill(['current_workspace_id' => $workspace->id])->save();
 
@@ -89,7 +105,7 @@ test('editors cannot update a workspace', function () {
 });
 
 test('users can switch to a workspace they belong to', function () {
-    $user = User::factory()->create();
+    $user = User::factory()->withActivePlan()->create();
     $first = $user->ensureCurrentWorkspace();
 
     $second = Workspace::query()->create([
@@ -108,10 +124,10 @@ test('users can switch to a workspace they belong to', function () {
 });
 
 test('non members cannot switch to a foreign workspace', function () {
-    $user = User::factory()->create();
+    $user = User::factory()->withActivePlan()->create();
     $user->ensureCurrentWorkspace();
 
-    $other = User::factory()->create();
+    $other = User::factory()->withActivePlan()->create();
     $foreign = $other->ensureCurrentWorkspace();
 
     $this->actingAs($user)
@@ -120,7 +136,7 @@ test('non members cannot switch to a foreign workspace', function () {
 });
 
 test('owner cannot delete their last workspace', function () {
-    $user = User::factory()->create();
+    $user = User::factory()->withActivePlan()->create();
     $workspace = $user->ensureCurrentWorkspace();
 
     $this->actingAs($user)
@@ -133,7 +149,7 @@ test('owner cannot delete their last workspace', function () {
 });
 
 test('owner can delete a non last workspace and current is reassigned', function () {
-    $user = User::factory()->create();
+    $user = User::factory()->withActivePlan()->create();
     $first = $user->ensureCurrentWorkspace();
 
     $second = Workspace::query()->create([
@@ -153,10 +169,10 @@ test('owner can delete a non last workspace and current is reassigned', function
 });
 
 test('non owner cannot destroy a workspace', function () {
-    $owner = User::factory()->create();
+    $owner = User::factory()->withActivePlan()->create();
     $workspace = $owner->ensureCurrentWorkspace();
 
-    $admin = User::factory()->create();
+    $admin = User::factory()->withActivePlan()->create();
     $workspace->members()->attach($admin->id, ['role' => 'admin']);
 
     Workspace::query()->create([

@@ -4,7 +4,7 @@ use App\Models\User;
 use Inertia\Testing\AssertableInertia as Assert;
 
 test('members can view workspace members list', function () {
-    $owner = User::factory()->create();
+    $owner = User::factory()->withActivePlan()->create();
     $workspace = $owner->ensureCurrentWorkspace();
 
     $this->actingAs($owner)
@@ -18,10 +18,10 @@ test('members can view workspace members list', function () {
 });
 
 test('non members cannot view workspace members', function () {
-    $owner = User::factory()->create();
+    $owner = User::factory()->withActivePlan()->create();
     $workspace = $owner->ensureCurrentWorkspace();
 
-    $stranger = User::factory()->create();
+    $stranger = User::factory()->withActivePlan()->create();
     $stranger->ensureCurrentWorkspace();
 
     $this->actingAs($stranger)
@@ -30,7 +30,7 @@ test('non members cannot view workspace members', function () {
 });
 
 test('admins can invite an existing user as editor', function () {
-    $owner = User::factory()->create();
+    $owner = User::factory()->withActivePlan()->create();
     $workspace = $owner->ensureCurrentWorkspace();
 
     $invitee = User::factory()->create([
@@ -50,13 +50,13 @@ test('admins can invite an existing user as editor', function () {
 });
 
 test('editors cannot invite members', function () {
-    $owner = User::factory()->create();
+    $owner = User::factory()->withActivePlan()->create();
     $workspace = $owner->ensureCurrentWorkspace();
 
-    $editor = User::factory()->create();
+    $editor = User::factory()->withActivePlan()->create();
     $workspace->members()->attach($editor->id, ['role' => 'editor']);
 
-    $invitee = User::factory()->create();
+    $invitee = User::factory()->withActivePlan()->create();
 
     $this->actingAs($editor)
         ->post(route('workspaces.members.store', $workspace), [
@@ -67,10 +67,10 @@ test('editors cannot invite members', function () {
 });
 
 test('admins can update a member role', function () {
-    $owner = User::factory()->create();
+    $owner = User::factory()->withActivePlan()->create();
     $workspace = $owner->ensureCurrentWorkspace();
 
-    $member = User::factory()->create();
+    $member = User::factory()->withActivePlan()->create();
     $workspace->members()->attach($member->id, ['role' => 'editor']);
 
     $this->actingAs($owner)
@@ -83,10 +83,10 @@ test('admins can update a member role', function () {
 });
 
 test('cannot change the owner role', function () {
-    $owner = User::factory()->create();
+    $owner = User::factory()->withActivePlan()->create();
     $workspace = $owner->ensureCurrentWorkspace();
 
-    $admin = User::factory()->create();
+    $admin = User::factory()->withActivePlan()->create();
     $workspace->members()->attach($admin->id, ['role' => 'admin']);
 
     $this->actingAs($admin)
@@ -101,10 +101,10 @@ test('cannot change the owner role', function () {
 });
 
 test('admins can remove a non owner member', function () {
-    $owner = User::factory()->create();
+    $owner = User::factory()->withActivePlan()->create();
     $workspace = $owner->ensureCurrentWorkspace();
 
-    $member = User::factory()->create();
+    $member = User::factory()->withActivePlan()->create();
     $memberOwn = $member->ensureCurrentWorkspace();
     $workspace->members()->attach($member->id, ['role' => 'editor']);
     $member->forceFill(['current_workspace_id' => $workspace->id])->save();
@@ -118,10 +118,10 @@ test('admins can remove a non owner member', function () {
 });
 
 test('cannot remove the workspace owner', function () {
-    $owner = User::factory()->create();
+    $owner = User::factory()->withActivePlan()->create();
     $workspace = $owner->ensureCurrentWorkspace();
 
-    $admin = User::factory()->create();
+    $admin = User::factory()->withActivePlan()->create();
     $workspace->members()->attach($admin->id, ['role' => 'admin']);
 
     $this->actingAs($admin)

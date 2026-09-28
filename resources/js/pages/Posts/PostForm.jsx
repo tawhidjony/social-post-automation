@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import GeminiAIStudioGen from './GeminiAIStudioGen';
 
 export default function PostForm({
     socialAccounts,
@@ -37,7 +38,8 @@ export default function PostForm({
         previews[0] || existingMedia[0] || null;
 
     return (
-        <div className="max-w-7xl mx-auto py-10 px-4 grid grid-cols-1 lg:grid-cols-2 gap-8">
+        <div className="py-10 px-4 grid grid-cols-1 lg:grid-cols-2 gap-8">
+            <GeminiAIStudioGen />
             <form onSubmit={onSubmit} className="bg-white p-6 rounded-xl shadow border space-y-6">
                 <h2 className="text-xl font-bold">{submitLabel}</h2>
 
@@ -70,7 +72,7 @@ export default function PostForm({
                         rows={4}
                         value={data.content}
                         onChange={(e) => setData('content', e.target.value)}
-                        className="w-full border-gray-200 rounded-lg focus:ring-blue-500 focus:border-blue-500"
+                        className="w-full border-gray-200 rounded-lg focus:ring-blue-500 focus:border-blue-500 border p-2"
                         placeholder="What would you like to share?"
                     />
                     {errors.content && (
@@ -111,7 +113,7 @@ export default function PostForm({
                         multiple
                         accept="image/*"
                         onChange={handleMediaChange}
-                        className="w-full text-sm"
+                        className="w-full text-sm border p-2 rounded-lg"
                     />
                     {errors.media && (
                         <p className="text-red-500 text-xs mt-1">{errors.media}</p>
@@ -124,7 +126,7 @@ export default function PostForm({
                         type="datetime-local"
                         value={data.scheduled_at}
                         onChange={(e) => setData('scheduled_at', e.target.value)}
-                        className="w-full border-gray-200 rounded-lg"
+                        className="w-full border-gray-200 rounded-lg border p-2"
                     />
                     <p className="text-xs text-gray-400 mt-1">Times are in your local timezone.</p>
                     {errors.scheduled_at && (
@@ -172,3 +174,6 @@ export default function PostForm({
         </div>
     );
 }
+
+
+

@@ -9,7 +9,7 @@ test('guests are redirected from social accounts index', function () {
 });
 
 test('index lists accounts for the current workspace and management flag', function () {
-    $user = User::factory()->create();
+    $user = User::factory()->withActivePlan()->create();
     $workspace = $user->ensureCurrentWorkspace();
 
     $account = SocialAccount::factory()->create([
@@ -17,7 +17,7 @@ test('index lists accounts for the current workspace and management flag', funct
         'name' => 'My Page',
     ]);
 
-    $otherUser = User::factory()->create();
+    $otherUser = User::factory()->withActivePlan()->create();
     $otherWorkspace = $otherUser->ensureCurrentWorkspace();
     SocialAccount::factory()->create([
         'workspace_id' => $otherWorkspace->id,
@@ -37,7 +37,7 @@ test('index lists accounts for the current workspace and management flag', funct
 });
 
 test('workspace admin can toggle social account active state', function () {
-    $user = User::factory()->create();
+    $user = User::factory()->withActivePlan()->create();
     $workspace = $user->ensureCurrentWorkspace();
     $account = SocialAccount::factory()->create([
         'workspace_id' => $workspace->id,
@@ -54,14 +54,14 @@ test('workspace admin can toggle social account active state', function () {
 });
 
 test('editor cannot toggle social account', function () {
-    $owner = User::factory()->create();
+    $owner = User::factory()->withActivePlan()->create();
     $workspace = $owner->ensureCurrentWorkspace();
     $account = SocialAccount::factory()->create([
         'workspace_id' => $workspace->id,
         'is_active' => true,
     ]);
 
-    $editor = User::factory()->create();
+    $editor = User::factory()->withActivePlan()->create();
     $workspace->members()->attach($editor->id, ['role' => 'editor']);
     $editor->forceFill(['current_workspace_id' => $workspace->id])->save();
 
@@ -75,7 +75,7 @@ test('editor cannot toggle social account', function () {
 });
 
 test('workspace admin can disconnect a social account', function () {
-    $user = User::factory()->create();
+    $user = User::factory()->withActivePlan()->create();
     $workspace = $user->ensureCurrentWorkspace();
     $account = SocialAccount::factory()->create([
         'workspace_id' => $workspace->id,
@@ -89,10 +89,10 @@ test('workspace admin can disconnect a social account', function () {
 });
 
 test('cannot update or destroy an account from another workspace', function () {
-    $user = User::factory()->create();
+    $user = User::factory()->withActivePlan()->create();
     $user->ensureCurrentWorkspace();
 
-    $otherUser = User::factory()->create();
+    $otherUser = User::factory()->withActivePlan()->create();
     $otherWorkspace = $otherUser->ensureCurrentWorkspace();
     $foreign = SocialAccount::factory()->create([
         'workspace_id' => $otherWorkspace->id,
@@ -110,7 +110,7 @@ test('cannot update or destroy an account from another workspace', function () {
 });
 
 test('invalid oauth provider returns not found', function () {
-    $user = User::factory()->create();
+    $user = User::factory()->withActivePlan()->create();
     $user->ensureCurrentWorkspace();
 
     $this->actingAs($user)
@@ -119,10 +119,10 @@ test('invalid oauth provider returns not found', function () {
 });
 
 test('editor cannot start oauth redirect', function () {
-    $owner = User::factory()->create();
+    $owner = User::factory()->withActivePlan()->create();
     $workspace = $owner->ensureCurrentWorkspace();
 
-    $editor = User::factory()->create();
+    $editor = User::factory()->withActivePlan()->create();
     $workspace->members()->attach($editor->id, ['role' => 'editor']);
     $editor->forceFill(['current_workspace_id' => $workspace->id])->save();
 

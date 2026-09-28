@@ -18,8 +18,8 @@ test('guests are redirected from subscription pages', function () {
 });
 
 test('members can view subscription index with plan and usage', function () {
-    $user = User::factory()->create();
-    $workspace = $user->ensureCurrentWorkspace();
+    $user = User::factory()->withActivePlan()->create();
+    $workspace = $user->currentWorkspace;
 
     $this->actingAs($user)
         ->get(route('subscription.index'))
@@ -35,20 +35,53 @@ test('members can view subscription index with plan and usage', function () {
         );
 });
 
-test('workspace creation seeds an active free subscription', function () {
+test('workspace creation does not assign a plan', function () {
     $user = User::factory()->create();
     $workspace = $user->ensureCurrentWorkspace();
-    $freePlanId = Plan::query()->where('slug', 'free')->value('id');
 
-    expect($workspace->current_plan_id)->toBe($freePlanId)
-        ->and($workspace->subscription)->not->toBeNull()
-        ->and($workspace->subscription->status)->toBe('active')
-        ->and($workspace->subscription->plan_id)->toBe($freePlanId);
+    expect($workspace->current_plan_id)->toBeNull()
+        ->and($workspace->subscription)->toBeNull()
+        ->and($workspace->hasActivePlan())->toBeFalse();
+});
+
+test('users without a plan are redirected to upgrade from gated routes', function () {
+    $user = User::factory()->create();
+    $user->ensureCurrentWorkspace();
+
+    $this->actingAs($user)
+        ->get(route('dashboard'))
+        ->assertRedirect(route('subscription.upgrade'));
+
+    $this->actingAs($user)
+        ->get(route('subscription.index'))
+        ->assertRedirect(route('subscription.upgrade'));
+
+    $this->actingAs($user)
+        ->get(route('subscription.upgrade'))
+        ->assertOk();
+});
+
+test('users without a plan can choose free and unlock the app', function () {
+    $user = User::factory()->create();
+    $user->ensureCurrentWorkspace();
+    $freePlan = Plan::query()->where('slug', 'free')->firstOrFail();
+
+    $this->actingAs($user)
+        ->post(route('subscription.store'), [
+            'plan_id' => $freePlan->id,
+        ])
+        ->assertRedirect(route('subscription.index'));
+
+    expect($user->fresh()->currentWorkspace->hasActivePlan())->toBeTrue();
+
+    $this->actingAs($user)
+        ->get(route('dashboard'))
+        ->assertOk();
 });
 
 test('admin can upgrade from free to pro', function () {
-    $user = User::factory()->create();
-    $workspace = $user->ensureCurrentWorkspace();
+    $user = User::factory()->withActivePlan()->create();
+    $workspace = $user->currentWorkspace;
     $freeSubscriptionId = $workspace->subscription->id;
     $proPlan = Plan::query()->where('slug', 'pro')->firstOrFail();
 
@@ -69,8 +102,8 @@ test('admin can upgrade from free to pro', function () {
 });
 
 test('admin can cancel a paid plan back to free', function () {
-    $user = User::factory()->create();
-    $workspace = $user->ensureCurrentWorkspace();
+    $user = User::factory()->withActivePlan()->create();
+    $workspace = $user->currentWorkspace;
     $proPlan = Plan::query()->where('slug', 'pro')->firstOrFail();
     $freePlan = Plan::query()->where('slug', 'free')->firstOrFail();
 
@@ -88,8 +121,8 @@ test('admin can cancel a paid plan back to free', function () {
 });
 
 test('editor cannot change or cancel the subscription', function () {
-    $owner = User::factory()->create();
-    $workspace = $owner->ensureCurrentWorkspace();
+    $owner = User::factory()->withActivePlan()->create();
+    $workspace = $owner->currentWorkspace;
     $proPlan = Plan::query()->where('slug', 'pro')->firstOrFail();
 
     $editor = User::factory()->create();
@@ -112,8 +145,8 @@ test('editor cannot change or cancel the subscription', function () {
 });
 
 test('social account limit redirects to subscription upgrade', function () {
-    $user = User::factory()->create();
-    $workspace = $user->ensureCurrentWorkspace();
+    $user = User::factory()->withActivePlan()->create();
+    $workspace = $user->currentWorkspace;
     $limit = $workspace->plan->max_social_accounts;
 
     SocialAccount::factory()->count($limit)->create([
@@ -127,8 +160,8 @@ test('social account limit redirects to subscription upgrade', function () {
 });
 
 test('monthly post limit redirects to subscription upgrade', function () {
-    $user = User::factory()->create();
-    $workspace = $user->ensureCurrentWorkspace();
+    $user = User::factory()->withActivePlan()->create();
+    $workspace = $user->currentWorkspace;
     $limit = $workspace->plan->max_posts_per_month;
     $account = SocialAccount::factory()->create([
         'workspace_id' => $workspace->id,

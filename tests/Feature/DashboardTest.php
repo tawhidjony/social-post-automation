@@ -8,9 +8,18 @@ test('guests are redirected to the login page', function () {
 });
 
 test('authenticated users can visit the dashboard', function () {
-    $user = User::factory()->create();
+    $user = User::factory()->withActivePlan()->create();
     $this->actingAs($user);
 
     $response = $this->get(route('dashboard'));
     $response->assertOk();
+});
+
+test('authenticated users without a plan are redirected to upgrade', function () {
+    $user = User::factory()->create();
+    $user->ensureCurrentWorkspace();
+    $this->actingAs($user);
+
+    $this->get(route('dashboard'))
+        ->assertRedirect(route('subscription.upgrade'));
 });

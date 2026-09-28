@@ -59,6 +59,14 @@ class Workspace extends Model
     }
 
     /**
+     * Whether the workspace has an assigned plan with an active subscription.
+     */
+    public function hasActivePlan(): bool
+    {
+        return $this->current_plan_id !== null && $this->subscription !== null;
+    }
+
+    /**
      * Cancel active subscriptions and switch the workspace to the given plan.
      */
     public function changePlan(Plan $plan): Subscription

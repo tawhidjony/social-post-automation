@@ -4,7 +4,7 @@ use App\Models\SocialAccount;
 use App\Models\User;
 
 test('social account can store a facebook-length avatar url', function () {
-    $user = User::factory()->create();
+    $user = User::factory()->withActivePlan()->create();
     $workspace = $user->ensureCurrentWorkspace();
 
     $avatarUrl = 'https://scontent.fdac183-1.fna.fbcdn.net/v/t39.30808-1/790756324_122093805687472842_1677436125279318919_n.png'
